@@ -1,719 +1,716 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Pool</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <style>
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background-color: #060606;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
-      padding: 10px;
-    }
+        body {
+            background-color: #060606;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            padding: 10px;
+        }
 
-    /* Left Box (Sidebar) */
-    .left-box {
-      width: 15%;
-      background-color: #121212;
-      border: 1px solid #333;
-      border-radius: 10px;
-      height: 100%;
-      margin-right: 10px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding: 20px;
-      align-items: flex-start;
-      flex-shrink: 0;
-    }
+        /* Left Box (Sidebar) */
+        .left-box {
+            width: 15%;
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 10px;
+            height: 100%;
+            margin-right: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+            align-items: flex-start;
+            flex-shrink: 0;
+        }
 
-    .icon {
-      display: flex;
-      align-items: center;
-      margin: 15px 0;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-      min-width: max-content;
-    }
+        .icon {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            min-width: max-content;
+        }
 
-    .icon-text {
-      margin-left: 10px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #888;
-      transition: color 0.3s ease;
-    }
+        .icon-text {
+            margin-left: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #888;
+            transition: color 0.3s ease;
+        }
 
-    .icon svg {
-      width: 20px;
-      height: 20px;
-      fill: #888;
-      transition: fill 0.3s ease;
-    }
+        .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #888;
+            transition: fill 0.3s ease;
+        }
 
-    .icon.active svg {
-      fill: white;
-    }
+        .icon.active svg {
+            fill: white;
+        }
 
-    .icon.active .icon-text {
-      color: white;
-    }
+        .icon.active .icon-text {
+            color: white;
+        }
 
-    .icon:hover svg {
-      fill: white;
-    }
+        .icon:hover svg {
+            fill: white;
+        }
 
-    .icon:hover .icon-text {
-      color: white;
-    }
+        .icon:hover .icon-text {
+            color: white;
+        }
 
-    /* Ensure the Account icon is always white */
-    .icon.account svg {
-      fill: white;
-    }
+        /* Ensure the Account icon is always white */
+        .icon.account svg {
+            fill: white;
+        }
 
-    .icon.account .icon-text {
-      color: white;
-    }
+        .icon.account .icon-text {
+            color: white;
+        }
 
-    /* Right Box (Chat Interface) */
-    .right-box {
-      width: 85%;
-      border-radius: 10px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-      overflow-y: auto;
-      max-height: 100vh;
-      position: relative;
-      background-color: #121212; /* Dark background */
-      border: 1px solid #333; /* Dark border */
-    }
+        /* Right Box (Main Content) */
+        .right-box {
+            width: 85%;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            height: 100%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 100vh;
+            position: relative;
+            background-color: #121212; /* Dark background */
+            border: 1px solid #333; /* Dark border */
+        }
 
-    /* Hide scrollbar but keep functionality */
-    .right-box::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
+        .right-box::-webkit-scrollbar {
+            display: none;
+        }
 
-    /* Chat Messages Container */
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 20px;
-    }
+        /* Top Bar */
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
 
-    /* Individual Message Styling */
-    .message {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 5px; /* Reduced margin for connected messages */
-    }
+        .top-bar .profile-picture {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
 
-    .message img.profile-pic {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
+        .top-bar .profile-picture:hover {
+            opacity: 0.8;
+        }
 
-    .message-content {
-      background-color: #333;
-      padding: 10px;
-      border-radius: 10px;
-      max-width: 70%;
-      position: relative;
-    }
+        /* Account Content */
+        .account-content {
+            width: 100%;
+            max-width: 100%;
+            text-align: left;
+            padding: 20px;
+        }
 
-    /* Connector line for grouped messages */
-    .message-content::before {
-      content: '';
-      position: absolute;
-      left: -10px;
-      top: 15px;
-      width: 10px;
-      height: 2px;
-      background-color: #333;
-    }
+        /* Greeting Section */
+        .greeting {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    .message-content p {
-      margin: 0;
-      font-size: 14px;
-      color: white;
-    }
+        .greeting img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: opacity 0.3s ease;
+        }
 
-    .message-content .username {
-      display: flex;
-      align-items: center;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #888;
-    }
+        .greeting h2 {
+            margin: 0;
+            font-weight: 600;
+        }
 
-    .message-content .username img {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin-right: 5px;
-    }
+        /* Sections */
+        .account-content .section {
+            margin-bottom: 30px;
+            width: 100%;
+        }
 
-    /* Media Message Styling */
-    .media-message img,
-    .media-message video {
-      max-width: 100%;
-      max-height: 500px; /* Increased size for images */
-      border-radius: 10px;
-      cursor: pointer;
-    }
+        .account-content .section h3 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
 
-    .media-message video {
-      background: black;
-    }
+        .account-content .section p {
+            color: #888; /* Gray text */
+        }
 
-    .media-message a {
-      display: block;
-      margin-top: 5px;
-      color: #888;
-      text-decoration: none;
-      font-size: 12px;
-    }
+        .account-content .section p:hover {
+            color: white; /* White on hover */
+        }
 
-    .media-message a:hover {
-      color: white;
-    }
+        .account-content .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-    /* Chat Input Container */
-    .chat-input {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background-color: #1a1a1a;
-      border-radius: 10px;
-      margin-top: auto;
-    }
+        .account-content .section ul li {
+            margin-bottom: 10px;
+        }
 
-    .chat-input input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      background-color: #333;
-      color: white;
-    }
+        .account-content .section ul li a {
+            color: #888; /* Gray text */
+            text-decoration: none;
+            font-weight: 600;
+        }
 
-    .chat-input button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      background-color: #444;
-      color: white;
-      cursor: pointer;
-    }
+        .account-content .section ul li a:hover {
+            color: white; /* White on hover */
+        }
 
-    .chat-input button:hover {
-      background-color: #555;
-    }
+        /* Buttons */
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            background-color: #444; /* Dark button */
+            color: #888; /* Gray text */
+        }
 
-    /* Plus Button for Options */
-    .plus-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      margin-left: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background-color: #444;
-      transition: background-color 0.3s ease;
-    }
+        .button:hover {
+            background-color: #555; /* Slightly lighter on hover */
+            color: white; /* White text on hover */
+        }
 
-    .plus-button:hover {
-      background-color: #555;
-    }
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
 
-    .plus-button svg {
-      width: 20px;
-      height: 20px;
-      fill: white;
-    }
+        .modal-content {
+            border-radius: 10px;
+            padding: 40px 20px 20px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+            background-color: #121212; /* Dark background */
+            border: 1px solid #333; /* Dark border */
+        }
 
-    /* Upload Popup */
-    .upload-popup {
-      position: absolute;
-      bottom: 70px;
-      right: 20px;
-      background-color: #333;
-      border: 1px solid #555;
-      border-radius: 10px;
-      padding: 10px;
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-    }
+        .modal-content h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: white; /* White text */
+        }
 
-    .upload-popup input[type="file"] {
-      display: none;
-    }
+        .section ul li a {
+    color: #888; /* Gray text */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.5s ease, transform 0.5s ease; /* Slower transition */
+}
 
-    .upload-popup label {
-      color: #888;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+.section ul li a:hover {
+    color: white; /* White on hover */
+    transform: translateX(5px); /* Optional: Add a slight movement on hover */
+}
 
-    .upload-popup label:hover {
-      background-color: #444;
-      color: white;
-    }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444; /* Dark border */
+            background-color: #333; /* Dark input background */
+            color: white; /* White text */
+        }
 
-    /* Close Button for Upload Popup */
-    .upload-popup .close-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: none;
-      border: none;
-      color: #888;
-      cursor: pointer;
-    }
+        .modal-content button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            background-color: #444; /* Dark button */
+            color: #888; /* Gray text */
+        }
 
-    .upload-popup .close-button:hover {
-      color: white;
-    }
+        .modal-content button:hover {
+            background-color: #555; /* Slightly lighter on hover */
+            color: white; /* White text on hover */
+        }
 
-    /* Toggle Button for Hiding Name and PFP */
-    .upload-popup .toggle-button {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: #888;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+            color: #888; /* Gray text */
+        }
 
-    .upload-popup .toggle-button:hover {
-      background-color: #444;
-      color: white;
-    }
+        .modal-close:hover {
+            color: white; /* White on hover */
+        }
 
-    /* Loading Indicator */
-    .loading-indicator {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-      color: white;
-      z-index: 1001;
-    }
+        /* Input Container */
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
 
-    /* Context Menu */
-    .context-menu {
-      position: absolute;
-      background-color: #333;
-      border: 1px solid #555;
-      border-radius: 5px;
-      padding: 5px;
-      z-index: 1000;
-      display: none;
-    }
+        /* Input Icon */
+        .input-icon {
+            width: 20px;
+            height: 20px;
+            fill: #888; /* Gray icons */
+            margin-right: 10px;
+        }
 
-    .context-menu button {
-      display: block;
-      width: 100%;
-      padding: 5px 10px;
-      background: none;
-      border: none;
-      color: white;
-      text-align: left;
-      cursor: pointer;
-    }
+        /* Password Toggle */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
 
-    .context-menu button:hover {
-      background-color: #444;
-    }
-  </style>
+        /* Eye Icon for Password Toggle */
+        .eye-icon {
+            width: 20px;
+            height: 20px;
+            fill: #888; /* Gray icons */
+            transition: fill 0.3s ease;
+            position: relative;
+        }
+
+        .eye-icon:not(.encrypted) {
+            fill: white; /* White when password is visible */
+        }
+
+        .eye-icon.encrypted::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #888; /* Gray line */
+            transform: rotate(-45deg);
+            transition: background-color 0.3s ease;
+            z-index: 1;
+        }
+
+        .toggle-password:hover .eye-icon {
+            fill: white; /* White on hover */
+        }
+
+        .toggle-password:hover .eye-icon.encrypted::before {
+            background-color: white; /* White line on hover */
+        }
+
+        /* Switch Between Sign In and Sign Up */
+        .switch {
+            color: #888; /* Gray text */
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .switch:hover {
+            color: white; /* White on hover */
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <!-- Left Box (Sidebar) -->
-  <div class="left-box" id="leftBox">
-    <div class="icon search" onclick="window.location.href = '/'">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span class="icon-text">Home</span>
-    </div>
-    <div class="icon community-games" onclick="window.location.href = '/community.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-        <circle cx="9" cy="9" r="1.5" />
-        <circle cx="15" cy="9" r="1.5" />
-        <path d="M12 16c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2z"/>
-      </svg>
-      <span class="icon-text">Community Games</span>
-    </div>
-    <div class="icon account active" onclick="window.location.href = '/account.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-      <span class="icon-text">Account</span>
-    </div>
-    <div class="icon public-profile" onclick="window.location.href = '/public-profile.html'">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-      <span class="icon-text">The Pool</span>
-    </div>
-  </div>
-
-  <!-- Right Box (Chat Interface) -->
-  <div class="right-box" id="rightBox">
-    <!-- Chat Messages -->
-    <div class="chat-messages" id="chatMessages">
-      <!-- Messages will be dynamically inserted here -->
+    <!-- Left Box (Sidebar) -->
+    <div class="left-box" id="leftBox">
+        <div class="icon search" onclick="window.location.href = '/'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span class="icon-text">Home</span>
+        </div>
+        <div class="icon community-games" onclick="window.location.href = '/community.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                <circle cx="9" cy="9" r="1.5" />
+                <circle cx="15" cy="9" r="1.5" />
+                <path d="M12 16c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2z"/>
+            </svg>
+            <span class="icon-text">Community Games</span>
+        </div>
+        <div class="icon account active" onclick="window.location.href = '/account.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            <span class="icon-text">Account</span>
+        </div>
+        <div class="icon public-profile" onclick="window.location.href = '/public-profile.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            <span class="icon-text">The pool</span>
+        </div>
     </div>
 
-    <!-- Chat Input -->
-    <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Type a message..." maxlength="200">
-      <button onclick="sendMessage()">Send</button>
-      <button class="plus-button" onclick="openUploadPopup()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      </button>
-    </div>
+    <!-- Right Box (Main Content) -->
+    <div class="right-box" id="rightBox">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <img class="profile-picture" id="profilePictureTop" src="https://via.placeholder.com/150" alt="Profile Picture" onclick="handleProfileClick()">
+        </div>
 
-    <!-- Upload Popup -->
-    <div class="upload-popup" id="uploadPopup">
-      <button class="close-button" onclick="closeUploadPopup()">×</button>
-      <input type="file" id="mediaInput" accept="image/*, video/*">
-      <label for="mediaInput">Choose File</label>
-      <button onclick="uploadMedia()">Upload</button>
-      <div class="toggle-button" onclick="toggleNameAndPfp()">
-        <input type="checkbox" id="hideNameAndPfp">
-        <label for="hideNameAndPfp">Hide Name and PFP</label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Loading Indicator -->
-  <div class="loading-indicator" id="loadingIndicator">
-    Uploading...
-  </div>
-
-  <!-- Context Menu -->
-  <div class="context-menu" id="contextMenu">
-    <button onclick="editMessage()">Edit</button>
-    <button onclick="deleteMessage()">Delete</button>
-  </div>
-
-  <script>
-    const backendUrl = 'https://simplicity-backend.onrender.com';
-    const chatMessages = document.getElementById('chatMessages');
-    const chatInput = document.getElementById('chatInput');
-    const uploadPopup = document.getElementById('uploadPopup');
-    const mediaInput = document.getElementById('mediaInput');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const hideNameAndPfpCheckbox = document.getElementById('hideNameAndPfp');
-    const contextMenu = document.getElementById('contextMenu');
-
-    let hideNameAndPfp = false;
-    let lastMessageUsername = null;
-    let selectedMessageId = null;
-
-    // Fetch and display messages from the backend
-    async function fetchMessages() {
-      try {
-        const response = await fetch(`${backendUrl}/messages`);
-        const messages = await response.json();
-        chatMessages.innerHTML = ''; // Clear existing messages
-        lastMessageUsername = null; // Reset last message username
-        messages.forEach(message => {
-          addMessageToChat(message);
-        });
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    }
-
-    // Add a message to the chat UI
-    function addMessageToChat(message) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      messageElement.dataset.messageId = message.id;
-
-      // Add right-click event for context menu
-      messageElement.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        showContextMenu(e, message.id);
-      });
-
-      let content = '';
-      if (message.mediaUrl) {
-        const fullMediaUrl = `${backendUrl}${message.mediaUrl}`;
-        if (message.mediaUrl.endsWith('.mp4') || message.mediaUrl.endsWith('.webm')) {
-          content = `
-            <div class="media-message">
-              ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
-                <div class="username">
-                  <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                  ${message.username}
-                </div>
-              `}
-              <video controls>
-                <source src="${fullMediaUrl}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-              <a href="${fullMediaUrl}" download="${message.mediaUrl.split('/').pop()}">Download</a>
+        <!-- Account Content -->
+        <div class="account-content">
+            <!-- Greeting Section -->
+            <div class="greeting">
+                <img id="profilePicture" src="https://via.placeholder.com/150" alt="Profile Picture">
+                <h2>Good Morning, <span id="username"></span>!</h2>
             </div>
-          `;
-        } else {
-          content = `
-            <div class="media-message">
-              ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
-                <div class="username">
-                  <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                  ${message.username}
-                </div>
-              `}
-              <img src="${fullMediaUrl}" alt="Media">
-              <a href="${fullMediaUrl}" download="${message.mediaUrl.split('/').pop()}">Download</a>
+
+            <!-- Account Settings Section -->
+            <div class="section">
+                <h3>Settings</h3>
+                <ul>
+                    <li><a href="#" onclick="openChangeUsernameModal()">Change Username</a></li>
+                    <li><a href="#" onclick="openChangeProfilePictureModal()">Change Profile Picture</a></li>
+                    <li><a href="#" onclick="logout()">Log Out</a></li>
+                </ul>
             </div>
-          `;
+        </div>
+    </div>
+
+    <!-- Sign-In Modal -->
+    <div class="modal" id="signInModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeSignInModal()">×</button>
+            <h2 id="authTitle">Sign In</h2>
+            
+            <!-- Username Field with Person Icon -->
+            <div class="input-container">
+                <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                <input type="text" id="usernameInput" placeholder="Username" required maxlength="18">
+            </div>
+
+            <!-- Password Field with Key Icon and Eye Toggle -->
+            <div class="input-container">
+                <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M22 9h-2V7c0-2.76-2.24-5-5-5S10 4.24 10 7v2H2v11h20V9zm-4 0h-6V7c0-1.1.9-2 2-2s2 .9 2 2v2z"/>
+                </svg>
+                <input type="password" id="passwordInput" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()">
+                    <svg class="eye-icon encrypted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                </span>
+            </div>
+
+            <!-- Profile Picture Field (Hidden by Default) -->
+            <div id="profilePictureContainer" style="display: none;">
+                <input type="url" id="profilePictureInput" placeholder="Profile Picture URL (optional)">
+            </div>
+
+            <!-- Sign In/Sign Up Button -->
+            <button id="authButton">Sign In</button>
+
+            <!-- Switch Between Sign In and Sign Up -->
+            <div class="switch" id="switchAuth">Don't have an account? Sign Up</div>
+        </div>
+    </div>
+
+    <!-- Change Username Modal -->
+    <div class="modal" id="changeUsernameModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeChangeUsernameModal()">×</button>
+            <h2>Change Username</h2>
+            <input type="text" id="newUsername" placeholder="New Username" required maxlength="18">
+            <button class="button" onclick="changeUsername()">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Change Profile Picture Modal -->
+    <div class="modal" id="changeProfilePictureModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeChangeProfilePictureModal()">×</button>
+            <h2>Change Profile Picture</h2>
+            <input type="url" id="newProfilePicture" placeholder="New Profile Picture URL" required>
+            <button class="button" onclick="changeProfilePicture()">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        const backendUrl = 'https://simplicity-backend.onrender.com';
+        let isSignIn = true;
+
+        // Handle Profile Picture Click
+        function handleProfileClick() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                // Redirect to account.html if signed in
+                window.location.href = '/account.html';
+            } else {
+                // Open sign-in modal if not signed in
+                openSignInModal();
+            }
         }
-      } else if (message.text) {
-        content = `
-          <div class="message-content">
-            ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
-              <div class="username">
-                <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                ${message.username}
-              </div>
-            `}
-            <p>${message.text}</p>
-          </div>
-        `;
-      }
 
-      messageElement.innerHTML = content;
-      chatMessages.appendChild(messageElement);
-      chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
-      lastMessageUsername = message.username; // Update last message username
-    }
-
-    // Toggle hiding name and profile picture
-    function toggleNameAndPfp() {
-      hideNameAndPfp = hideNameAndPfpCheckbox.checked;
-      fetchMessages(); // Refresh messages to apply changes
-    }
-
-    // Show context menu on right-click
-    function showContextMenu(e, messageId) {
-      selectedMessageId = messageId;
-      contextMenu.style.display = 'block';
-      contextMenu.style.left = `${e.pageX}px`;
-      contextMenu.style.top = `${e.pageY}px`;
-    }
-
-    // Hide context menu
-    window.addEventListener('click', () => {
-      contextMenu.style.display = 'none';
-    });
-
-    // Edit a message
-    async function editMessage() {
-      const newText = prompt('Edit your message:');
-      if (newText) {
-        try {
-          const response = await fetch(`${backendUrl}/messages/${selectedMessageId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: newText }),
-          });
-
-          if (response.ok) {
-            fetchMessages(); // Refresh messages
-          } else {
-            alert('Failed to edit message.');
-          }
-        } catch (error) {
-          console.error('Error editing message:', error);
+        // Open Sign-In Modal
+        function openSignInModal() {
+            document.getElementById('signInModal').style.display = 'flex';
         }
-      }
-    }
 
-    // Delete a message
-    async function deleteMessage() {
-      if (confirm('Are you sure you want to delete this message?')) {
-        try {
-          const response = await fetch(`${backendUrl}/messages/${selectedMessageId}`, {
-            method: 'DELETE',
-          });
-
-          if (response.ok) {
-            fetchMessages(); // Refresh messages
-          } else {
-            alert('Failed to delete message.');
-          }
-        } catch (error) {
-          console.error('Error deleting message:', error);
+        // Close Sign-In Modal
+        function closeSignInModal() {
+            document.getElementById('signInModal').style.display = 'none';
         }
-      }
-    }
 
-    // Send a message to the backend
-    async function sendMessage() {
-      const text = chatInput.value.trim();
+        // Open Change Username Modal
+        function openChangeUsernameModal() {
+            document.getElementById('changeUsernameModal').style.display = 'flex';
+        }
 
-      if (!text) return;
+        // Close Change Username Modal
+        function closeChangeUsernameModal() {
+            document.getElementById('changeUsernameModal').style.display = 'none';
+        }
 
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      if (!currentUser) {
-        alert('Please sign in to send messages.');
-        return;
-      }
+        // Open Change Profile Picture Modal
+        function openChangeProfilePictureModal() {
+            document.getElementById('changeProfilePictureModal').style.display = 'flex';
+        }
 
-      const message = {
-        username: currentUser.username,
-        profilePicture: currentUser.profilePicture,
-        text,
-      };
+        // Close Change Profile Picture Modal
+        function closeChangeProfilePictureModal() {
+            document.getElementById('changeProfilePictureModal').style.display = 'none';
+        }
 
-      try {
-        const response = await fetch(`${backendUrl}/messages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(message),
+        // Toggle Password Visibility
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('passwordInput');
+            const eyeIcon = document.querySelector('.eye-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text'; // Show password
+                eyeIcon.classList.remove('encrypted'); // Remove line when visible
+                eyeIcon.setAttribute('fill', 'white'); // Change icon color when visible
+            } else {
+                passwordInput.type = 'password'; // Hide password
+                eyeIcon.classList.add('encrypted'); // Add line when encrypted
+                eyeIcon.setAttribute('fill', '#888'); // Reset icon color when hidden
+            }
+        }
+
+        // Validate Username Length
+        function validateUsername() {
+            const usernameInput = document.getElementById('usernameInput');
+            if (usernameInput.value.length > 18) {
+                alert('Username must be 18 characters or less.');
+                usernameInput.value = usernameInput.value.slice(0, 18); // Truncate to 18 characters
+            }
+        }
+
+        // Add Event Listener for Username Input
+        document.getElementById('usernameInput').addEventListener('input', validateUsername);
+
+        // Switch between Sign In and Sign Up
+        document.getElementById('switchAuth').addEventListener('click', () => {
+            isSignIn = !isSignIn;
+            const authTitle = document.getElementById('authTitle');
+            const authButton = document.getElementById('authButton');
+            const switchAuth = document.getElementById('switchAuth');
+            const profilePictureContainer = document.getElementById('profilePictureContainer');
+
+            if (isSignIn) {
+                authTitle.innerText = 'Sign In';
+                authButton.innerText = 'Sign In';
+                switchAuth.innerText = "Don't have an account? Sign Up";
+                profilePictureContainer.style.display = 'none';
+            } else {
+                authTitle.innerText = 'Sign Up';
+                authButton.innerText = 'Sign Up';
+                switchAuth.innerText = "Already have an account? Sign In";
+                profilePictureContainer.style.display = 'block';
+            }
         });
 
-        if (response.ok) {
-          chatInput.value = ''; // Clear input field
-          fetchMessages(); // Refresh messages
-        } else {
-          alert('Failed to send message.');
-        }
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
+        // Handle Sign In / Sign Up
+        document.getElementById('authButton').addEventListener('click', async () => {
+            const username = document.getElementById('usernameInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const profilePicture = document.getElementById('profilePictureInput').value || 'https://via.placeholder.com/150';
 
-    // Open Upload Popup
-    function openUploadPopup() {
-      uploadPopup.style.display = 'flex';
-    }
+            if (!username || !password) {
+                alert('Please fill in all fields.');
+                return;
+            }
 
-    // Close Upload Popup
-    function closeUploadPopup() {
-      uploadPopup.style.display = 'none';
-    }
+            const endpoint = isSignIn ? '/login' : '/register';
+            const body = isSignIn ? { username, password } : { username, password, profilePicture };
 
-    // Upload Media
-    async function uploadMedia() {
-      const mediaFile = mediaInput.files[0];
+            try {
+                const response = await fetch(`${backendUrl}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
 
-      if (!mediaFile) {
-        alert('Please select a file to upload.');
-        return;
-      }
-
-      loadingIndicator.style.display = 'block'; // Show loading indicator
-
-      const formData = new FormData();
-      formData.append('media', mediaFile);
-
-      try {
-        const response = await fetch(`${backendUrl}/upload`, {
-          method: 'POST',
-          body: formData,
+                if (response.ok) {
+                    const user = await response.json();
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    updateUI(user); // Update the UI with user data
+                    closeSignInModal(); // Close the modal
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'An error occurred. Please try again.');
+                }
+            } catch (error) {
+                alert('Network error. Please check your connection.');
+            }
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Upload successful:', data);
-          sendMessageWithMedia(data.mediaUrl);
-          uploadPopup.style.display = 'none'; // Close upload popup
-        } else {
-          const error = await response.json();
-          console.error('Upload failed:', error);
-          alert('Failed to upload media.');
+        // Change Username
+        async function changeUsername() {
+            const newUsername = document.getElementById('newUsername').value;
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!newUsername) {
+                alert('Please enter a new username.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${backendUrl}/change-username`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, newUsername }),
+                });
+
+                if (response.ok) {
+                    const updatedUser = { ...currentUser, username: newUsername };
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    document.getElementById('username').innerText = newUsername;
+                    closeChangeUsernameModal();
+                    alert('Username changed successfully!');
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Failed to update username.');
+                }
+            } catch (error) {
+                alert('Network error. Please check your connection.');
+            }
         }
-      } catch (error) {
-        console.error('Error uploading media:', error);
-        alert('Network error. Please check your connection.');
-      } finally {
-        loadingIndicator.style.display = 'none'; // Hide loading indicator
-      }
-    }
 
-    // Send a message with media
-    async function sendMessageWithMedia(mediaUrl) {
-      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      if (!currentUser) {
-        alert('Please sign in to send messages.');
-        return;
-      }
+        // Change Profile Picture
+        async function changeProfilePicture() {
+            const newProfilePicture = document.getElementById('newProfilePicture').value;
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-      const message = {
-        username: currentUser.username,
-        profilePicture: currentUser.profilePicture,
-        mediaUrl,
-      };
+            if (!newProfilePicture) {
+                alert('Please enter a new profile picture URL.');
+                return;
+            }
 
-      try {
-        const response = await fetch(`${backendUrl}/messages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(message),
-        });
+            try {
+                const response = await fetch(`${backendUrl}/change-profile-picture`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, newProfilePicture }),
+                });
 
-        if (response.ok) {
-          fetchMessages(); // Refresh messages to show the new media
-        } else {
-          alert('Failed to send media message.');
+                if (response.ok) {
+                    const updatedUser = { ...currentUser, profilePicture: newProfilePicture };
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    document.getElementById('profilePicture').src = newProfilePicture;
+                    document.getElementById('profilePictureTop').src = newProfilePicture;
+                    closeChangeProfilePictureModal();
+                    alert('Profile picture changed successfully!');
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Failed to update profile picture.');
+                }
+            } catch (error) {
+                alert('Network error. Please check your connection.');
+            }
         }
-      } catch (error) {
-        console.error('Error sending media message:', error);
-        alert('Network error. Please check your connection.');
-      }
-    }
 
-    // Load messages on page load
-    fetchMessages();
+        // Log Out
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.reload(); // Reload the page to reset the UI
+        }
 
-    // Send message on Enter key press
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
+        // Update UI with User Data
+        function updateUI(user) {
+            document.getElementById('username').innerText = user.username;
+            document.getElementById('profilePicture').src = user.profilePicture;
+            document.getElementById('profilePictureTop').src = user.profilePicture;
+        }
 
-    // Close upload popup when clicking outside
-    window.addEventListener('click', (e) => {
-      if (e.target === uploadPopup) {
-        closeUploadPopup();
-      } 
-    });
-  </script>
+        // Load user data on page load
+        window.onload = () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (currentUser) {
+                updateUI(currentUser); // Update UI if user is already logged in
+            } else {
+                openSignInModal(); // Open the sign-in modal if no user is logged in
+            }
+        };
+    </script>
 </body>
 </html>
