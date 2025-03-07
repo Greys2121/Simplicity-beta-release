@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Pool</title>
   <style>
-    * {
+        * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -413,7 +413,7 @@
       <button onclick="uploadMedia()">Upload</button>
       <div class="toggle-button" onclick="toggleNameAndPfp()">
         <input type="checkbox" id="hideNameAndPfp">
-        <label for="hideNameAndPfp">Hide Name and PFP</label>
+        <label for="hideNameAndPfp">Hide Name and PFP (for others)</label>
       </div>
     </div>
   </div>
@@ -504,7 +504,7 @@
         if (message.mediaUrl.endsWith('.mp4') || message.mediaUrl.endsWith('.webm')) {
           content = `
             <div class="media-message">
-              ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
+              ${message.username === lastMessageUsername ? '' : `
                 <div class="username">
                   <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
                   ${message.hideNameAndPfp ? 'Anonymous' : message.username}
@@ -520,7 +520,7 @@
         } else {
           content = `
             <div class="media-message">
-              ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
+              ${message.username === lastMessageUsername ? '' : `
                 <div class="username">
                   <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
                   ${message.hideNameAndPfp ? 'Anonymous' : message.username}
@@ -534,7 +534,7 @@
       } else if (message.text) {
         content = `
           <div class="message-content">
-            ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
+            ${message.username === lastMessageUsername ? '' : `
               <div class="username">
                 <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
                 ${message.hideNameAndPfp ? 'Anonymous' : message.username}
@@ -551,7 +551,7 @@
       lastMessageUsername = message.username; // Update last message username
     }
 
-    // Toggle hiding name and profile picture
+    // Toggle hiding name and profile picture for others
     function toggleNameAndPfp() {
       hideNameAndPfp = hideNameAndPfpCheckbox.checked;
       fetchMessages(); // Refresh messages to apply changes
