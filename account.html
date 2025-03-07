@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
     <style>
-                * {
+              * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -437,16 +437,12 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeSignInModal()">×</button>
             <h2 id="authTitle">Sign In</h2>
-            
-            <!-- Username Field with Person Icon -->
             <div class="input-container">
                 <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
                 </svg>
                 <input type="text" id="usernameInput" placeholder="Username" required maxlength="18">
             </div>
-
-            <!-- Password Field with Key Icon and Eye Toggle -->
             <div class="input-container">
                 <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M22 9h-2V7c0-2.76-2.24-5-5-5S10 4.24 10 7v2H2v11h20V9zm-4 0h-6V7c0-1.1.9-2 2-2s2 .9 2 2v2z"/>
@@ -458,27 +454,11 @@
                     </svg>
                 </span>
             </div>
-
-            <!-- Profile Picture Field (Hidden by Default) -->
             <div id="profilePictureContainer" style="display: none;">
                 <input type="url" id="profilePictureInput" placeholder="Profile Picture URL (optional)">
             </div>
-
-            <!-- Sign In/Sign Up Button -->
             <button id="authButton">Sign In</button>
-
-            <!-- Switch Between Sign In and Sign Up -->
             <div class="switch" id="switchAuth">Don't have an account? Sign Up</div>
-        </div>
-    </div>
-
-    <!-- Change Username Modal -->
-    <div class="modal" id="changeUsernameModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeChangeUsernameModal()">×</button>
-            <h2>Change Username</h2>
-            <input type="text" id="newUsername" placeholder="New Username" required maxlength="18">
-            <button class="button" onclick="changeUsername()">Confirm</button>
         </div>
     </div>
 
@@ -500,10 +480,8 @@
         function handleProfileClick() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (currentUser) {
-                // Redirect to account.html if signed in
                 window.location.href = '/account.html';
             } else {
-                // Open sign-in modal if not signed in
                 openSignInModal();
             }
         }
@@ -516,16 +494,6 @@
         // Close Sign-In Modal
         function closeSignInModal() {
             document.getElementById('signInModal').style.display = 'none';
-        }
-
-        // Open Change Username Modal
-        function openChangeUsernameModal() {
-            document.getElementById('changeUsernameModal').style.display = 'flex';
-        }
-
-        // Close Change Username Modal
-        function closeChangeUsernameModal() {
-            document.getElementById('changeUsernameModal').style.display = 'none';
         }
 
         // Open Change Profile Picture Modal
@@ -544,13 +512,13 @@
             const eyeIcon = document.querySelector('.eye-icon');
 
             if (passwordInput.type === 'password') {
-                passwordInput.type = 'text'; // Show password
-                eyeIcon.classList.remove('encrypted'); // Remove line when visible
-                eyeIcon.setAttribute('fill', 'white'); // Change icon color when visible
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('encrypted');
+                eyeIcon.setAttribute('fill', 'white');
             } else {
-                passwordInput.type = 'password'; // Hide password
-                eyeIcon.classList.add('encrypted'); // Add line when encrypted
-                eyeIcon.setAttribute('fill', '#888'); // Reset icon color when hidden
+                passwordInput.type = 'password';
+                eyeIcon.classList.add('encrypted');
+                eyeIcon.setAttribute('fill', '#888');
             }
         }
 
@@ -559,7 +527,7 @@
             const usernameInput = document.getElementById('usernameInput');
             if (usernameInput.value.length > 18) {
                 alert('Username must be 18 characters or less.');
-                usernameInput.value = usernameInput.value.slice(0, 18); // Truncate to 18 characters
+                usernameInput.value = usernameInput.value.slice(0, 18);
             }
         }
 
@@ -611,8 +579,8 @@
                 if (response.ok) {
                     const user = await response.json();
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    updateUI(user); // Update the UI with user data
-                    closeSignInModal(); // Close the modal
+                    updateUI(user);
+                    closeSignInModal();
                 } else {
                     const error = await response.json();
                     alert(error.error || 'An error occurred. Please try again.');
@@ -621,38 +589,6 @@
                 alert('Network error. Please check your connection.');
             }
         });
-
-        // Change Username
-        async function changeUsername() {
-            const newUsername = document.getElementById('newUsername').value;
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-            if (!newUsername) {
-                alert('Please enter a new username.');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${backendUrl}/change-username`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, newUsername }),
-                });
-
-                if (response.ok) {
-                    const updatedUser = { ...currentUser, username: newUsername };
-                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-                    document.getElementById('username').innerText = newUsername;
-                    closeChangeUsernameModal();
-                    alert('Username changed successfully!');
-                } else {
-                    const error = await response.json();
-                    alert(error.error || 'Failed to update username.');
-                }
-            } catch (error) {
-                alert('Network error. Please check your connection.');
-            }
-        }
 
         // Change Profile Picture
         async function changeProfilePicture() {
@@ -665,10 +601,10 @@
             }
 
             try {
-                const response = await fetch(`${backendUrl}/change-profile-picture`, {
-                    method: 'POST',
+                const response = await fetch(`${backendUrl}/users/${currentUser.id}/profilePicture`, {
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, newProfilePicture }),
+                    body: JSON.stringify({ profilePicture: newProfilePicture }),
                 });
 
                 if (response.ok) {
@@ -690,7 +626,7 @@
         // Log Out
         function logout() {
             localStorage.removeItem('currentUser');
-            window.location.reload(); // Reload the page to reset the UI
+            window.location.reload();
         }
 
         // Update UI with User Data
@@ -705,9 +641,9 @@
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
             if (currentUser) {
-                updateUI(currentUser); // Update UI if user is already logged in
+                updateUI(currentUser);
             } else {
-                openSignInModal(); // Open the sign-in modal if no user is logged in
+                openSignInModal();
             }
         };
     </script>
