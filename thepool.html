@@ -442,6 +442,34 @@
     let lastMessageUsername = null;
     let selectedMessageId = null;
 
+    // WebSocket connection
+    const ws = new WebSocket('wss://simplicity-backend.onrender.com');
+
+    ws.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.action === 'delete') {
+        // Remove the deleted message from the UI
+        const messageElement = document.querySelector(`[data-message-id="${message.id}"]`);
+        if (messageElement) {
+          messageElement.remove();
+        }
+      } else {
+        addMessageToChat(message);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
     // Fetch and display messages from the backend
     async function fetchMessages() {
       try {
