@@ -103,12 +103,13 @@
       position: relative;
       background-color: #121212; /* Dark background */
       border: 1px solid #333; /* Dark border */
+      scrollbar-width: none; /* Hide scrollbar for Firefox */
+      -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
     }
 
-    /* Hide scrollbar but keep functionality */
+    /* Hide scrollbar for Chrome, Safari, and Opera */
     .right-box::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
+      display: none;
     }
 
     /* Chat Messages Container */
@@ -506,7 +507,7 @@
               ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
                 <div class="username">
                   <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                  ${message.username}
+                  ${message.hideNameAndPfp ? 'Anonymous' : message.username}
                 </div>
               `}
               <video controls>
@@ -522,7 +523,7 @@
               ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
                 <div class="username">
                   <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                  ${message.username}
+                  ${message.hideNameAndPfp ? 'Anonymous' : message.username}
                 </div>
               `}
               <img src="${fullMediaUrl}" alt="Media">
@@ -536,7 +537,7 @@
             ${hideNameAndPfp || message.username === lastMessageUsername ? '' : `
               <div class="username">
                 <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
-                ${message.username}
+                ${message.hideNameAndPfp ? 'Anonymous' : message.username}
               </div>
             `}
             <p>${message.text}</p>
@@ -626,6 +627,7 @@
         username: currentUser.username,
         profilePicture: currentUser.profilePicture,
         text,
+        hideNameAndPfp: hideNameAndPfpCheckbox.checked,
       };
 
       try {
@@ -706,6 +708,7 @@
         username: currentUser.username,
         profilePicture: currentUser.profilePicture,
         mediaUrl,
+        hideNameAndPfp: hideNameAndPfpCheckbox.checked,
       };
 
       try {
