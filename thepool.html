@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Pool</title>
   <style>
-        * {
+    * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -117,6 +117,8 @@
       flex: 1;
       overflow-y: auto;
       padding-bottom: 20px;
+      display: flex;
+      flex-direction: column-reverse; /* Messages start from the bottom */
     }
 
     /* Individual Message Styling */
@@ -361,17 +363,18 @@
     .context-menu button:hover {
       background-color: #444;
     }
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 20px;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-    }
 
-    /* Hide scrollbar for Chrome, Safari, and Opera */
-    .chat-messages::-webkit-scrollbar {
-      display: none;
+    /* Initials-based Profile Picture */
+    .initials-pfp {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: white;
     }
   </style>
 </head>
@@ -499,6 +502,17 @@
       }
     }
 
+    // Generate initials and color for profile picture
+    function generateInitialsAndColor(username) {
+      const initials = username
+        .split(' ')
+        .map((name) => name[0])
+        .join('')
+        .toUpperCase();
+      const color = `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;
+      return { initials, color };
+    }
+
     // Add a message to the chat UI
     function addMessageToChat(message) {
       const messageElement = document.createElement('div');
@@ -511,6 +525,12 @@
         showContextMenu(e, message.id);
       });
 
+      // Generate initials and color if no profile picture
+      const { initials, color } = generateInitialsAndColor(message.username);
+      const profilePicture = message.profilePicture
+        ? `<img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">`
+        : `<div class="initials-pfp" style="background-color: ${color};">${initials}</div>`;
+
       let content = '';
       if (message.mediaUrl) {
         const fullMediaUrl = `${backendUrl}${message.mediaUrl}`;
@@ -519,7 +539,7 @@
             <div class="media-message">
               ${message.username === lastMessageUsername ? '' : `
                 <div class="username">
-                  <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
+                  ${profilePicture}
                   ${message.hideNameAndPfp ? 'Anonymous' : message.username}
                 </div>
               `}
@@ -535,7 +555,7 @@
             <div class="media-message">
               ${message.username === lastMessageUsername ? '' : `
                 <div class="username">
-                  <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
+                  ${profilePicture}
                   ${message.hideNameAndPfp ? 'Anonymous' : message.username}
                 </div>
               `}
@@ -549,7 +569,7 @@
           <div class="message-content">
             ${message.username === lastMessageUsername ? '' : `
               <div class="username">
-                <img src="${message.profilePicture}" class="profile-pic" alt="Profile Picture">
+                ${profilePicture}
                 ${message.hideNameAndPfp ? 'Anonymous' : message.username}
               </div>
             `}
